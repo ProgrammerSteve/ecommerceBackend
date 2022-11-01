@@ -1,4 +1,4 @@
-// postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+
 const fs = require('fs');
 const {deploySchemas} = require('./deploySchemas.js')
 const dotenv = require('dotenv').config();
@@ -12,11 +12,11 @@ const dataSql=fs.readFileSync('./deploySchemas.sql').toString();
 const knex = require('knex')({
 	client: "pg",
 	connection: {
-		host: '127.0.0.1',
-    port: 5432,
-		user: 'postgres',
-		password: 'test',
-		database: 'TESTDATABASE',
+		host: process.env.HOST,
+    port: process.env.PORT,
+		user: process.env.USER,
+		password: process.env.PASSWORD,
+		database: process.env.DATABASE,
 	},
 });
 
@@ -88,6 +88,7 @@ app.listen(3001, async ()=> {
 			console.log('dropping tables...')
 			output.forEach(async (table)=>{
 				console.log(`dropping ${table}`)
+
 				await knex.schema.dropTableIfExists(`${table}`)
 			})
 		}else{
