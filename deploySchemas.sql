@@ -1,6 +1,0 @@
-\i './tables/users.sql'
-\i './tables/orders.sql'
-\i './tables/products.sql'
-\i './tables/cart.sql'
-\i './tables/order_item.sql'
-\i './tables/cart_item.sql'

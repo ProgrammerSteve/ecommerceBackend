@@ -1,13 +1,14 @@
-
 const fs = require('fs');
 const {deploySchemas} = require('./deploySchemas.js')
+const {removeForeignKeys}=require('./removeForeignKeys.js')
+
 const dotenv = require('dotenv').config();
 const express = require('express');
 const bodyParser=require('body-parser');
 const cors=require('cors');
 const morgan = require('morgan');
+// const dataSql=fs.readFileSync('./deploySchemas.sql').toString();
 
-const dataSql=fs.readFileSync('./deploySchemas.sql').toString();
 
 const knex = require('knex')({
 	client: "pg",
@@ -19,11 +20,110 @@ const knex = require('knex')({
 		database: process.env.DATABASE,
 	},
 });
-
 const app=express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
+app.get("/",(req,res)=>{res.send('Backend Server Started')});
+
+	// db.transaction(trx => {
+	// 	trx.insert({
+	// 		hash: hash,
+	// 		email: email
+	// 	})
+	// 	.into('login')
+	// 	.returning('email')
+	// 	.then(loginEmail => {
+	// 		console.log('login user was submitted...');
+	// 		return trx('users')
+	// 			.returning('*')
+	// 			.insert({
+	// 				email: loginEmail[0],
+	// 				name: name,
+	// 				joined: new Date()
+	// 			})
+	// 			.then(user => {
+	// 				console.log(user[0]);
+	// 				res.json(user[0]);
+	// 			})
+	// 	})
+	// 	.then(trx.commit)
+	// 	.catch(trx.rollback)
+	// })
+	// .catch(err => res.status(400).json('unable to register'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Create User
+app.post("/user",async (req,res)=>{
+	const createUser=async (req,res,db)=>{
+		const {password,email,fullname,username,address,city,state,country}=req.body
+		const created_at=new Date();
+		await db.insert({
+			password,
+			email,
+			fullname,
+			username,
+			address,
+			city,
+			state,
+			country,
+			created_at
+		}).into('users')
+	}
+	await createUser(req,res,knex)
+	res.json({hello:'hello'});
+})
+
+//Read User
+//Update User
+//Delete User
+
+//Create Cart
+//Read Cart
+//update Cart
+	//Add cart item to cart
+	//remove cart item from cart
+//Delete Cart
+
+//Create Order
+//Read Order
+//Update Order
+//Delete Order
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // app.get("/",(req,res)=>{
 //   const output=knex.select('blah').from('users')	
@@ -78,8 +178,19 @@ app.use(morgan('combined'));
 
 // });
 
+// app.listen(3001,()=>{console.log('started on port 3001')});
+
+
+
 app.listen(3001, async ()=> {
 	console.log('starting on port 3001:')
+
+	// console.log('Removing foreign keys')
+	// await removeForeignKeys(knex);
+	// console.log('keys removed')
+
+
+
 	await knex.select(`*`).from('pg_catalog.pg_tables')
 	.then(data=>{
 		if(data.length){
@@ -88,7 +199,6 @@ app.listen(3001, async ()=> {
 			console.log('dropping tables...')
 			output.forEach(async (table)=>{
 				console.log(`dropping ${table}`)
-
 				await knex.schema.dropTableIfExists(`${table}`)
 			})
 		}else{
@@ -96,7 +206,13 @@ app.listen(3001, async ()=> {
 		}})
 	.catch(err=>console.log(err))
 
-	console.log('attempting to deploy schema...')
-	await deploySchemas(knex)
-	console.log('complete')
+
+
+
+	// console.log('attempting to deploy schema...')
+	// await deploySchemas(knex)
+	// console.log('complete')
+
+
+
 })
