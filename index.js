@@ -53,23 +53,12 @@ app.get("/",(req,res)=>{res.send('Backend Server Started')});
 	// .catch(err => res.status(400).json('unable to register'))
 
 
-
-
-
-
-
-
-
-
-
-
-
 //Create User
 app.post("/user",async (req,res)=>{
-	const createUser=async (req,res,db)=>{
+	const handleCreateUser=async (req,res,db)=>{
 		const {password,email,fullname,username,address,city,state,country}=req.body
 		const created_at=new Date();
-		await db.insert({
+		const user={
 			password,
 			email,
 			fullname,
@@ -79,15 +68,103 @@ app.post("/user",async (req,res)=>{
 			state,
 			country,
 			created_at
-		}).into('users')
+		}
+		const isEmailUsed= await db.select('*')
+			.from('users')
+			.where({email})
+			.then(user=>user.length?true:false)
+			.catch(err=>res.status(400).json('error verifying user email'));
+		const isUsernameUsed= await db.select('*')
+			.from('users')
+			.where({username})
+			.then(user=>user.length?true:false)
+			.catch(err=>res.status(400).json('error verifying user username'));
+		if(!isEmailUsed){
+			if(!isUsernameUsed){
+				await db.insert(user).into('users').returning('email').then(email=>console.log('account created for: ', {email}))
+				res.send(user)
+			}else{
+				res.status(400).json('username already in use')
+			}
+		}else{
+			res.status(400).json('email already in use')
+		}
 	}
-	await createUser(req,res,knex)
-	res.json({hello:'hello'});
+	await handleCreateUser(req,res,knex)
 })
 
+
+
+
+
 //Read User
-//Update User
+app.get("/user/:user_id",(req,res)=>{
+	const handleGetUser=(req,res,db)=>{
+		const {user_id}=req.params;
+		db.select('*').from('users').where({user_id})
+		.then(user=>{
+			if(user.length){
+				res.json(user[0]);
+			}else{
+				res.status(400).json('Not Found')
+			}
+		})
+		.catch(err=>res.status(400).json('error getting user'))
+	};
+	handleGetUser(req,res,knex);
+})
+
+//Update 
+app.post("/user/:user_id",(req,res)=>{
+	const handleUserUpdate=(req,res,db)=>{
+		const {user_id}= req.params;
+		const {
+			password,
+			email,
+			fullname,
+			username,
+			address,
+			city,
+			state,
+			country
+		}=req.body;
+
+		db('users')
+			.where({user_id})
+			.update({
+				password,
+				email,
+				fullname,
+				username,
+				address,
+				city,
+				state,
+				country
+			})
+			.then(resp=>{
+				if(resp){
+					res.json("success")
+				}else{
+					res.status(400).json("Unable to update")
+				}
+			})
+			.catch(e=>{
+				res.status(400).json('error updating user');
+			})
+	}	
+	handleUserUpdate(req,res,knex)
+})
+
 //Delete User
+
+
+
+
+
+
+
+
+
 
 //Create Cart
 //Read Cart
@@ -191,20 +268,20 @@ app.listen(3001, async ()=> {
 
 
 
-	await knex.select(`*`).from('pg_catalog.pg_tables')
-	.then(data=>{
-		if(data.length){
-			const output= data.filter(obj=>obj.schemaname==='public').map(obj=>obj.tablename)
-			console.log('tables found: ',output)
-			console.log('dropping tables...')
-			output.forEach(async (table)=>{
-				console.log(`dropping ${table}`)
-				await knex.schema.dropTableIfExists(`${table}`)
-			})
-		}else{
-			throw new Error('no tables found');
-		}})
-	.catch(err=>console.log(err))
+	// await knex.select(`*`).from('pg_catalog.pg_tables')
+	// .then(data=>{
+	// 	if(data.length){
+	// 		const output= data.filter(obj=>obj.schemaname==='public').map(obj=>obj.tablename)
+	// 		console.log('tables found: ',output)
+	// 		console.log('dropping tables...')
+	// 		output.forEach(async (table)=>{
+	// 			console.log(`dropping ${table}`)
+	// 			await knex.schema.dropTableIfExists(`${table}`)
+	// 		})
+	// 	}else{
+	// 		throw new Error('no tables found');
+	// 	}})
+	// .catch(err=>console.log(err))
 
 
 
