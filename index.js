@@ -1,6 +1,7 @@
 const fs = require('fs');
-const {deploySchemas} = require('./deploySchemas.js')
-const {removeForeignKeys}=require('./removeForeignKeys.js')
+const {deploySchemas} = require('./deploySchemas')
+const {removeForeignKeys}=require('./removeForeignKeys')
+const {seedSchemas} = require('./seedSchemas')
 
 const dotenv = require('dotenv').config();
 const express = require('express');
@@ -59,15 +60,8 @@ app.post("/user",async (req,res)=>{
 		const {password,email,fullname,username,address,city,state,country}=req.body
 		const created_at=new Date();
 		const user={
-			password,
-			email,
-			fullname,
-			username,
-			address,
-			city,
-			state,
-			country,
-			created_at
+			password,email,fullname,username,address,
+			city,state,country,created_at
 		}
 		const isEmailUsed= await db.select('*')
 			.from('users')
@@ -93,10 +87,6 @@ app.post("/user",async (req,res)=>{
 	await handleCreateUser(req,res,knex)
 })
 
-
-
-
-
 //Read User
 app.get("/user/:user_id",(req,res)=>{
 	const handleGetUser=(req,res,db)=>{
@@ -114,32 +104,21 @@ app.get("/user/:user_id",(req,res)=>{
 	handleGetUser(req,res,knex);
 })
 
+
+
 //Update 
 app.post("/user/:user_id",(req,res)=>{
 	const handleUserUpdate=(req,res,db)=>{
 		const {user_id}= req.params;
 		const {
-			password,
-			email,
-			fullname,
-			username,
-			address,
-			city,
-			state,
-			country
+			password,email,fullname,username,
+			address,city,state,country
 		}=req.body;
-
 		db('users')
 			.where({user_id})
 			.update({
-				password,
-				email,
-				fullname,
-				username,
-				address,
-				city,
-				state,
-				country
+				password,email,fullname,username,
+				address,city,state,country
 			})
 			.then(resp=>{
 				if(resp){
@@ -167,6 +146,14 @@ app.post("/user/:user_id",(req,res)=>{
 
 
 //Create Cart
+app.post("/cart/:user_id",async (req,res)=>{
+	const {user_id}= req.params;
+	const created_at= new Date();
+	const cart={user_id, created_at}
+	knex.insert(cart).into('cart').then(()=>res.send("cart created..."))
+	.catch(err=>res.status(400).json('error creating cart'))
+})
+
 //Read Cart
 //update Cart
 	//Add cart item to cart
@@ -258,38 +245,45 @@ app.post("/user/:user_id",(req,res)=>{
 // app.listen(3001,()=>{console.log('started on port 3001')});
 
 
+function dropTables(db,tables) {
+	return Promise.all(tables.map(async function (table) {
+		 try {
+			 console.log(table, 'down start')
+			 await db.raw(`DROP TABLE IF EXISTS "${table}" CASCADE`)
+			 console.log(table, 'down finish')
+		 } catch (err) {
+			 console.error(err.detail)
+		 }
+		 return true
+	 }))
+ };
 
-app.listen(3001, async ()=> {
-	console.log('starting on port 3001:')
-
-	// console.log('Removing foreign keys')
-	// await removeForeignKeys(knex);
-	// console.log('keys removed')
-
-
-
-	// await knex.select(`*`).from('pg_catalog.pg_tables')
-	// .then(data=>{
-	// 	if(data.length){
-	// 		const output= data.filter(obj=>obj.schemaname==='public').map(obj=>obj.tablename)
-	// 		console.log('tables found: ',output)
-	// 		console.log('dropping tables...')
-	// 		output.forEach(async (table)=>{
-	// 			console.log(`dropping ${table}`)
-	// 			await knex.schema.dropTableIfExists(`${table}`)
-	// 		})
-	// 	}else{
-	// 		throw new Error('no tables found');
-	// 	}})
-	// .catch(err=>console.log(err))
 
 
 
 
-	// console.log('attempting to deploy schema...')
-	// await deploySchemas(knex)
-	// console.log('complete')
+app.listen(3001, async ()=> {
+	console.log('starting on port 3001:')
+	console.log("dropping current tables in database...")
+	const tables= await knex.select(`*`).from('pg_catalog.pg_tables')
+	.then(data=>{
+		if(data.length){
+			let tables= data.filter(obj=>obj.schemaname==='public').map(obj=>obj.tablename)
+			console.log('tables found: ',tables)
+			return tables
+		}else{
+			console.log('no tables found')
+			return [];
+		}}).catch(err=>console.log(err))
 
+	console.log('dropping tables...')
+	await dropTables(knex,tables) 
 
+	console.log('attempting to deploy schema...')
+	await deploySchemas(knex)
+	console.log('complete')
 
+	console.log('seeding schemas')
+	//await seedSchemas(knex)
+	console.log('complete')
 })
