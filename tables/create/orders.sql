@@ -4,10 +4,9 @@ CREATE TABLE orders (
     order_id serial PRIMARY KEY,
     user_id int,
     status VARCHAR(20),
-    date TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL,
     amount real,
-    total int,
-    ref VARCHAR(100),
+    items int,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 

@@ -1,10 +1,10 @@
 const fs = require('fs');
-const users=fs.readFileSync('./tables/users.sql').toString();
-const products=fs.readFileSync('./tables/products.sql').toString();
-const orders=fs.readFileSync('./tables/orders.sql').toString();
-const cart=fs.readFileSync('./tables/cart.sql').toString();
-const cart_item=fs.readFileSync('./tables/cart_item.sql').toString();
-const order_item=fs.readFileSync('./tables/order_item.sql').toString();
+const users=fs.readFileSync('./tables/create/users.sql').toString();
+const products=fs.readFileSync('./tables/create/products.sql').toString();
+const orders=fs.readFileSync('./tables/create/orders.sql').toString();
+const cart=fs.readFileSync('./tables/create/cart.sql').toString();
+const cart_item=fs.readFileSync('./tables/create/cart_item.sql').toString();
+const order_item=fs.readFileSync('./tables/create/order_item.sql').toString();
 
 const deploySchemas= async(db)=>{
   console.log("deploying products:");
