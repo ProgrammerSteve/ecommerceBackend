@@ -3,3 +3,7 @@ const handleDeleteOrder=(req,res,db)=>{
 }
 
 module.exports={handleDeleteOrder};
+
+
+//need to account for cascading effects
+//delete order_items

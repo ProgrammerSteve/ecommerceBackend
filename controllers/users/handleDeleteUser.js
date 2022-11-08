@@ -16,3 +16,8 @@ const handleDeleteUser=(req,res,db)=>{
 }
 
 module.exports={handleDeleteUser};
+
+
+//need to account for cascading effects
+//delete cart
+//delete orders

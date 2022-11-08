@@ -1,17 +1,17 @@
-const { handleAddItemToCart } =require("./handleAddItemToCart") ;
+const { handleAddOrUpdateItemInCart } =require("./handleAddOrUpdateItemInCart") ;
 const { handleCreateCart } =require("./handleCreateCart");
-const { handleDecreaseQuantity }= require("./handleDecreaseQuantity");
+const { handleDecrementQuantity }= require("./handleDecrementQuantity");
 const { handleDeleteCart }= require("./handleDeleteCart");
 const { handleGetCart }= require("./handleGetCart");
-const { handleIncreaseQuantity }= require("./handleIncreaseQuantity");
+const { handleIncrementQuantity }= require("./handleIncrementQuantity");
 const { handleRemoveItemFromCart }= require("./handleRemoveItemFromCart");
 
 module.exports={
-  handleAddItemToCart,
+  handleAddOrUpdateItemInCart,
   handleCreateCart,
-  handleDecreaseQuantity,
+  handleDecrementQuantity,
   handleDeleteCart,
   handleGetCart,
-  handleIncreaseQuantity,
+  handleIncrementQuantity,
   handleRemoveItemFromCart
 };
