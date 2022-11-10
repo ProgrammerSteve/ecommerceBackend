@@ -55,7 +55,7 @@ app.delete("/product/:product_id",(req,res)=>{products.handleDeleteProduct(req,r
 
 //Orders
 app.post("/order/:user_id",(req,res)=>{orders.handleCreateOrder(req,res,knex)})
-app.get("/order/:order_id",(req,res)=>{orders.handleGetOrder(req,res,knex);})
+app.get("/order/:user_id",(req,res)=>{orders.handleGetOrder(req,res,knex);})
 app.get("/order",(req,res)=>{orders.handleGetOrders(req,res,knex);})
 app.post("/order/:order_id",(req,res)=>{orders.handleUpdateOrder(req,res,knex)})
 app.delete("/order/:order_id",(req,res)=>{orders.handleDeleteOrder(req,res,knex);})
