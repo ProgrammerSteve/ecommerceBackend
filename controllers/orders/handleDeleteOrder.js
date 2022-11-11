@@ -2,6 +2,8 @@ const handleDeleteOrder=(req,res,db)=>{
 
   const {order_id}= req.params;
 
+
+  
   db('order')
     .where({order_id})
     .del()

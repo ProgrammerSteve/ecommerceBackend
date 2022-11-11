@@ -16,3 +16,6 @@ const handleDeleteProduct=(req,res,db)=>{
 }
 
 module.exports={handleDeleteProduct};
+
+
+//cascade delete all the cart_items that contain this product

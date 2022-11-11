@@ -22,7 +22,6 @@ const app=express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
-
 app.get("/test",(req,res)=>{res.send('test')});
 
 //User
@@ -31,20 +30,14 @@ app.get("/user/:user_id",(req,res)=>{user.handleGetUser(req,res,knex);})
 app.post("/user/:user_id",(req,res)=>{user.handleUpdateUser(req,res,knex)})
 app.delete("/user/:user_id", (req,res)=>{user.handleDeleteUser(req,res,knex)})
 
-
-
-
 //Cart
 app.post("/cart/:id", (req,res)=>{cart.handleCreateCart(req,res,knex)})
 app.get("/cart/:id",(req,res)=>{products.handleGetCart(req,res,knex);})
 app.delete("/cart/:id", (req,res)=>{cart.handleDeleteCart(req,res,knex)})
-
 app.post("/cart/add/:id/:quantity", (req,res)=>{cart.handleAddOrUpdateItemInCart(req,res,knex)})
 app.post("/cart/remove/:id", (req,res)=>{cart.handleRemoveItemFromCart(req,res,knex)})
 app.post("/cart/increment/:id", (req,res)=>{cart.handleIncrementQuantity(req,res,knex)})
 app.post("/cart/decrement/:id", (req,res)=>{cart.handleDecrementQuantity(req,res,knex)})
-
-
 
 //Products
 app.post("/product",(req,res)=>{products.handleAddProduct(req,res,knex)})
@@ -55,6 +48,7 @@ app.delete("/product/:product_id",(req,res)=>{products.handleDeleteProduct(req,r
 
 //Orders
 app.post("/order/:user_id",(req,res)=>{orders.handleCreateOrder(req,res,knex)})
+app.post("/order/cart/:user_id",(req,res)=>{orders.handleCartToOrder(req,res,knex)})
 app.get("/order/:user_id",(req,res)=>{orders.handleGetOrder(req,res,knex);})
 app.get("/order",(req,res)=>{orders.handleGetOrders(req,res,knex);})
 app.post("/order/:order_id",(req,res)=>{orders.handleUpdateOrder(req,res,knex)})
