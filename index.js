@@ -44,7 +44,7 @@ app.post("/product",(req,res)=>{products.handleAddProduct(req,res,knex)})
 app.get("/product/:product_id",(req,res)=>{products.handleGetProduct(req,res,knex);})
 app.get("/product",(req,res)=>{products.handleGetProducts(req,res,knex);})
 app.post("/product/:product_id",(req,res)=>{products.handleUpdateProduct(req,res,knex)})
-app.delete("/product/:product_id",(req,res)=>{products.handleDeleteProduct(req,res,knex);})
+app.delete("/product/:product_id",(req,res)=>{products.handleDiscontinueProduct(req,res,knex);})
 
 //Orders
 app.post("/order/:user_id",(req,res)=>{orders.handleCreateOrder(req,res,knex)})
@@ -58,29 +58,3 @@ app.listen(3001, async ()=> {
 	console.log('starting on port 3001:')
 	// await resetDatabase(knex)
 })
-
-	// db.transaction(trx => {
-	// 	trx.insert({
-	// 		hash: hash,
-	// 		email: email
-	// 	})
-	// 	.into('login')
-	// 	.returning('email')
-	// 	.then(loginEmail => {
-	// 		console.log('login user was submitted...');
-	// 		return trx('users')
-	// 			.returning('*')
-	// 			.insert({
-	// 				email: loginEmail[0],
-	// 				name: name,
-	// 				joined: new Date()
-	// 			})
-	// 			.then(user => {
-	// 				console.log(user[0]);
-	// 				res.json(user[0]);
-	// 			})
-	// 	})
-	// 	.then(trx.commit)
-	// 	.catch(trx.rollback)
-	// })
-	// .catch(err => res.status(400).json('unable to register'))

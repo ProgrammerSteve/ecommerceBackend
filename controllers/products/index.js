@@ -1,12 +1,12 @@
 const { handleAddProduct } =require("./handleAddProduct") ;
-const { handleDeleteProduct } =require("./handleDeleteProduct");
+const { handleDiscontinueProduct } =require("./handleDiscontinueProduct");
 const { handleGetProduct }= require("./handleGetProduct");
 const { handleGetProducts }= require("./handleGetProducts");
 const { handleUpdateProduct }= require("./handleUpdateProduct");
 
 module.exports={
   handleAddProduct,
-  handleDeleteProduct,
+  handleDiscontinueProduct,
   handleGetProduct,
   handleGetProducts,
   handleUpdateProduct

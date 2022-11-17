@@ -17,20 +17,6 @@ const handleDeleteCart=async(req,res,db)=>{
     await trx.rollback(err)
     res.status(400).json(`error deleting cart: ${err}`)
   }
-
-  // db('cart')
-  //   .where({id})
-  //   .del()
-  //   .then(resp=>{
-  //     if(resp){
-  //       res.json("cart successfully deleted")
-  //     }else{
-  //       res.status(400).json("Unable to delete cart")
-  //     }
-  //   })
-  //   .catch(e=>{
-  //     res.status(400).json('error deleting cart');
-  //   })
 }
 
 module.exports={handleDeleteCart};
