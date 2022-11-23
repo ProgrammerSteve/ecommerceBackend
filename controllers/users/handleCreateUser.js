@@ -15,17 +15,21 @@ const handleCreateUser=async (req,res,db)=>{
     .where({username})
     .then(user=>user.length?true:false)
     .catch(err=>res.status(400).json('error verifying user username'));
-  if(!isEmailUsed){
-    if(!isUsernameUsed){
-      await db.insert(user).into('users').returning('email').then(email=>console.log('account created for: ', {email}))
-      res.send(user)
-    }else{
-      res.status(400).json('username already in use')
-    }
-  }else{
+  if(isEmailUsed){
     res.status(400).json('email already in use')
+    return
+  }
+  if(isUsernameUsed){
+    res.status(400).json('username already in use')
+    return
+  }
+  try{
+    await db.insert(user).into('users').returning('email').then(email=>console.log('account created for: ', email))
+    res.send(user)
+  }catch(err){
+    res.status(400).json('error creating user in database')
+    return
   }
 }
-
 
 module.exports={handleCreateUser};

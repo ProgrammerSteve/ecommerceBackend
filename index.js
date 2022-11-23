@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const bodyParser=require('body-parser');
 const cors=require('cors');
@@ -15,14 +16,18 @@ const knex = require('knex')({
 	},
 });
 
+
 const {resetDatabase} = require('./tables/scripts/resetDatabase')
-const {user,orders,cart,products}=require('./controllers')
+const {user,orders,cart,products,auth}=require('./controllers')
 
 const app=express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
 app.get("/test",(req,res)=>{res.send('test')});
+
+//Auth
+app.post("/auth",(req,res)=>{auth.handleLoginUser(req,res,knex,jwt)})
 
 //User
 app.post("/user", (req,res)=>{user.handleCreateUser(req,res,knex)})
