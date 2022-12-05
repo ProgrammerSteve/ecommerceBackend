@@ -1,5 +1,6 @@
 const express = require("express");
 const { cart } = require("../controllers");
+const { knex } = require("../database/database");
 const cartRouter = express.Router();
 
 //Cart
