@@ -1,9 +1,11 @@
-const { handleAuth} =require("./handleAuth") ;
-const { handleLoginUser } =require("./handleLoginUser");
-const { handleAccessToken } =require("./handleAccessToken");
+const { handleAuth } = require("./handleAuth");
+const { handleLoginUser } = require("./handleLoginUser");
+const { handleAccessToken } = require("./handleAccessToken");
+const { checkedLoggedIn } = require("./checkedLoggedIn");
 
-module.exports={
+module.exports = {
   handleAuth,
   handleLoginUser,
-  handleAccessToken
+  handleAccessToken,
+  checkedLoggedIn,
 };

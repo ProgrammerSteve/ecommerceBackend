@@ -1,10 +1,11 @@
 const express = require("express");
-const { cart } = require("../controllers");
+const { cart, auth } = require("../controllers");
 const { knex } = require("../database/database");
 const cartRouter = express.Router();
+const { checkedLoggedIn } = auth;
 
 //Cart
-cartRouter.post("/:id", (req, res) => {
+cartRouter.post("/:id", (req, checkedLoggedIn, res) => {
   cart.handleCreateCart(req, res, knex);
 });
 cartRouter.get("/:id", (req, res) => {
